@@ -210,3 +210,7 @@ export function List<T>({
 ### observeUnmount(el, callback): Child
 
 可以在组件返回值使用，用于监听 Mobxact 组件被 unmount 的时机。
+
+## computedMapperFn(fn): Function
+
+功能类似`mobx-utils`中的`computedFn`函数，返回的函数在有订阅时将对相同的参数返回相同的结果。但是本函数限定传入的函数只能接受一个参数，这可以取得比`computedFn`更好的性能，从而满足大列表等场景需求。
