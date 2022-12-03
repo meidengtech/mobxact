@@ -2,13 +2,13 @@ import { action, computed, observable } from 'mobx';
 import { IBoxedValue, jsx } from 'mobxact';
 
 const ComponentTest = (prop: {}, value: IBoxedValue<number>) => {
-  return computed(() => (
+  return (
     <span>
-      {value.get()}
-      {value.get() > 0 ? 'YES' : ''}
-      {value.get() < 0 ? 'NO' : ''}
+      {value}
+      {computed(() => (value.get() > 0 ? 'YES' : null))}
+      {computed(() => (value.get() < 0 ? 'NO' : null))}
     </span>
-  ));
+  );
 };
 
 export function Counter() {
@@ -19,7 +19,6 @@ export function Counter() {
     <div>
       Current Value:
       <input
-        disabled
         value={computed(() => state.get().toString())}
         oninput={action((ev) => {
           state.set(Number(ev.currentTarget.value));

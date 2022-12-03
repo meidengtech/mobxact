@@ -6,9 +6,11 @@
     "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
+    "moduleResolution": "node",
     "incremental": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "strict": true
-  }
+  },
+  "include": ["./src/**/*"]
 }

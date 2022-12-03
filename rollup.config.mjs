@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import clear from 'rollup-plugin-clear';
 import terser from '@rollup/plugin-terser';
-import pkg from './package.json' assert { type: 'json'};
+import pkg from './package.json' assert { type: 'json' };
 
 export default [
   {
@@ -19,6 +19,9 @@ export default [
         file: 'dist/index.umd.js',
         name: 'Mobxact',
         format: 'umd',
+        globals: {
+          mobxact: 'Mobxact',
+        },
       },
     ],
     external: [
@@ -30,7 +33,7 @@ export default [
       clear({
         targets: ['dist'],
       }),
-      terser()
+      terser(),
     ],
   },
 ];

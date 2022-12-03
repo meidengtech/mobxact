@@ -6,6 +6,7 @@ import {
   isComputed,
   isObservableArray,
   observable,
+  observe,
   onBecomeUnobserved,
   reaction,
 } from 'mobx';
@@ -370,6 +371,14 @@ export class ListMountPoint implements IMountPoint {
     }
     this.updating = false;
     this.el = el;
+
+    if (isObservableArray(el)) {
+      // should copy & record current list.
+      this.el = [...el];
+      this.disposeReaction = observe(el, () => {
+        this.update([...el]);
+      });
+    }
   }
 
   onChildMountedDomChanged(mp: MountPoint, dom: Node | null) {
@@ -460,7 +469,7 @@ export class ListMountPoint implements IMountPoint {
     this.updateFirstDom();
   }
 
-  disposeable?: () => void;
+  disposeReaction?: () => void;
 
   mount(parent: HTMLElement, before: () => Node | null) {
     this.parent = parent;
@@ -500,9 +509,9 @@ export class ListMountPoint implements IMountPoint {
       item.dispose();
     }
     this.children = [];
-    if (this.disposeable) {
-      this.disposeable();
-      delete this.disposeable;
+    if (this.disposeReaction) {
+      this.disposeReaction();
+      delete this.disposeReaction;
     }
   }
 }
