@@ -129,6 +129,22 @@ function App() {
 
 请记住状态切换后导致的 jsx 变化会触发整个的重新挂载，Mobxact 没有任何的元素或属性比对机制。如果你不希望整个元素重新挂载，请将 observable/computed 绑定到具体的属性或文本上。
 
+如果你依赖的不是一个 boolean 而是一个条件语句，你可能会在条件结果没有发生变化时触发 computed 的重计算，这会导致组件被重新挂载。为了解决这个问题，可以使用`mobx-utils`的`expr()`方法，或用`computed().get()`来实现相同的功能
+
+```tsx
+function App() {
+  const counter = observable.box(0);
+  return (
+    <div>
+      {computed(
+        () => computed(() => counter.get() > 100).get() && <SomeComponent />
+      )}
+      {computed(() => expr(() => counter.get() > 100) && <SomeComponent />)}
+    </div>
+  );
+}
+```
+
 ### 列表渲染
 
 Mobxact 支持动态的列表渲染，但必须满足两个条件：
