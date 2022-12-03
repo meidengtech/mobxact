@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "target": "esnext",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "incremental": true,
+    "jsx": "react",
+    "jsxFactory": "jsx",
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "paths": {
+      "mobxact": ["../dist"]
+    }
+  }
+}
