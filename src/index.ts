@@ -342,7 +342,7 @@ class MountPoint implements IMountPoint {
   }
 }
 
-export class ListMountPoint implements IMountPoint {
+class ListMountPoint implements IMountPoint {
   children: IMountPoint[] = [];
   doms: (Node | null)[] = [];
   el: Children;

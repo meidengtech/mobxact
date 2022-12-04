@@ -5,6 +5,7 @@
 - **本项目目前处于实验阶段。用于生产项目请慎重考虑。**
 - **本项目不是 React 的又一个实现，无法像 infernojs 等库那样直接用于替换 react** 请参考 [它不是 React！](#它不是-react)
   - 如果你有在 React 下做组件级更新的需求，可以试试 [yurijs](https://github.com/meidengtech/yurijs)
+- 如果你在尝试中遇到问题，可以加 QQ 群[799934276](https://jq.qq.com/?_wv=1027&k=zLdnGrOH)
 
 ## 为什么搞这么个玩意
 

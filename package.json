@@ -3,6 +3,7 @@
   "version": "0.0.1-alpha",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:meidengtech/mobxact.git",
   "author": "tdzl2003 <tdzl2003@gmail.com>",
   "license": "MIT",
