@@ -4,10 +4,12 @@
 
 - **本项目目前处于实验阶段。用于生产项目请慎重考虑。**
 - **本项目不是 React 的又一个实现，无法像 infernojs 等库那样直接用于替换 react** 请参考 [它不是 React！](#它不是-react)
+  - 如果你有在 React 下做组件级更新的需求，可以试试 [yurijs](https://github.com/meidengtech/yurijs)
 
 ## 为什么搞这么个玩意
 
 - React 依靠 rerender 刷新组件状态，这意味着我们编写大组件会遇到性能问题，意味着我们即使在 react 中使用 mobx，也得不到真正的 mvvm 双向绑定。
+  - 我们之前在 [yurijs](https://github.com/meidengtech/yurijs)中尝试了组件级更新，但是有一定的额外开销和代价（children 的值无法被直接取到和处理，这影响了一部分功能组件如 Select 的使用），也无法实现属性级的绑定。
   - 与之不同，mobxact 不依靠 rerender 刷新状态，因此你可以自由的编写巨大的组件而无需担心 rerender 性能问题。
 - React 太重了，让我们经常问自己，有必要吗……
   - mobxact 的 UMD 版本仅 7.65KB，es 版本更小。并且它还未在体积角度进行足够优化，未来有希望做到更小……
@@ -63,6 +65,18 @@ render(<App />, rootEl);
 ```
 
 到目前为止，一切看起来都和 react 一样。
+
+### 传递 Children 给组件
+
+传递 Children 给组件的方式与 React 标准的方式有所不同，Children 将作为 props 之后的额外参数传递，而非 props 参数的属性
+
+```jsx
+function SomeComponent(props: PropTypes, ...children: Children) {
+  return <div>{...children}</div>;
+}
+```
+
+你可以给 children 指定任何其它的类型约束，但目前 TypeScript 并不能很好的检查 Mobxact 中 Children 的类型约束。
 
 ### 数据状态
 
@@ -140,6 +154,25 @@ function App() {
         () => computed(() => counter.get() > 100).get() && <SomeComponent />
       )}
       {computed(() => expr(() => counter.get() > 100) && <SomeComponent />)}
+    </div>
+  );
+}
+```
+
+另一种解决方案是将 Element 渲染好，并传递给另一个组件进行条件渲染，这样可以确保 Element 实例不变
+
+```tsx
+function If({ test }: { test: IBoxedValue<boolean> }, ...children: Children) {
+  return computed(() => (test.get() ? children : null));
+}
+
+function App() {
+  const counter = observable.box(0);
+  return (
+    <div>
+      <If test={computed(() => counter.get > 100)}>
+        <SomeComponent />
+      </If>
     </div>
   );
 }
