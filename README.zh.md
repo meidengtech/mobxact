@@ -214,7 +214,7 @@ export function List<T>({
 
 ### 为什么 mobxact 下你不再需要 hooks
 
-- useMemo/useCallback/useRef: FC 函数仅在挂载的时候执行一次，因此你无需使用这些 API 就能保证相应资源只创建一次。
+- useMemo/useCallback/useRef: FC 函数仅在挂载的时候执行一次，因此你无需使用这些 API 就能保证相应资源只创建一次。如果你需要带有依赖的 useMemo，你可以使用 mobx 的`computed`来实现相同的作用。
 - useState/useReducer: 你可以直接使用 mobx 管理状态，并且创建状态的代码只会执行一次。
 - useEffect: render 函数就是 mount 生命周期，如果你需要监听 unmount，可以使用 [observeUmount 方法](#observeunmountel-callback)
 - useContext: 通常建议通过模块、全局、单例等方法管理全局 store。我们后续也有可能会提供 context 的替代方法。
