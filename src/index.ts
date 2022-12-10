@@ -32,20 +32,22 @@ export type Child =
     >
   | IBoxedValue<Child>;
 export type Children = Child[];
+export type JSXNode = Child | Children;
 
-export type ComponentType<
-  PropType = {},
-  ChildrenType extends [...any[]] = any[]
-> = (props: PropType, ...children: ChildrenType) => Child | Children;
+export type ComponentType<PropType = {}> = (
+  props: PropType
+) => Child | Children;
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
       div: {
         ref?: Ref<HTMLDivElement>;
+        children?: JSXNode;
       };
       span: {
         ref?: Ref<HTMLSpanElement>;
+        children?: JSXNode;
       };
       input: {
         ref?: Ref<HTMLInputElement>;
@@ -53,6 +55,7 @@ declare global {
         checked?: boolean | IBoxedValue<boolean>;
         disabled?: boolean | IBoxedValue<boolean>;
         value?: string | IBoxedValue<string>;
+        children?: JSXNode;
 
         onchange?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
         oninput?: (
@@ -61,6 +64,7 @@ declare global {
       };
       button: {
         ref?: Ref<HTMLButtonElement>;
+        children?: JSXNode;
         onclick?: (ev: MouseEvent) => void;
       };
     }
@@ -70,6 +74,10 @@ declare global {
       span: HTMLSpanElement;
       input: HTMLInputElement;
       button: HTMLButtonElement;
+    }
+
+    interface ElementChildrenAttribute {
+      children: {}; // specify children name to use
     }
   }
 }
@@ -106,7 +114,6 @@ export interface Element<Type extends ElementType = ElementType> {
   [elementSymbol]: true;
   type: Type;
   props: ElementPropType<Type>;
-  children?: Children;
 }
 
 export interface IMountPoint {
@@ -150,7 +157,6 @@ class DOMMountPoint implements IMountPoint {
   constructor(
     tag: string,
     props: any,
-    children: Children | null = null,
     readonly onMountedDomChanged: (v: Node | null) => void
   ) {
     const dom = (this._dom = document.createElement(tag));
@@ -178,8 +184,8 @@ class DOMMountPoint implements IMountPoint {
         }
       }
     }
-    if (children) {
-      const mp = new ListMountPoint(children, () => {});
+    if (props.children) {
+      const mp = new ListMountPoint(props.children, () => {});
       mp.mount(dom, () => null);
     }
     this.updateRef(dom);
@@ -265,12 +271,11 @@ class MountPoint implements IMountPoint {
         this.childMountPoint = new DOMMountPoint(
           ch.type,
           ch.props,
-          ch.children,
           this.onMountedDomChanged
         );
       } else {
         this.childMountPoint = new MountPoint(
-          (ch.type as ComponentType)(ch.props, ...(ch.children ?? [])),
+          (ch.type as ComponentType)(ch.props),
           this.onMountedDomChanged
         );
       }
@@ -539,8 +544,13 @@ export function jsx(
   return {
     [elementSymbol]: true,
     type: type,
-    props,
-    children,
+    props:
+      children.length > 0
+        ? {
+            ...props,
+            children,
+          }
+        : props,
   };
 }
 

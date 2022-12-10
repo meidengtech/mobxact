@@ -1,12 +1,12 @@
 import { action, computed, observable } from 'mobx';
 import { IBoxedValue, jsx } from 'mobxact';
 
-const ComponentTest = (prop: {}, value: IBoxedValue<number>) => {
+const ComponentTest = ({ children }: { children: IBoxedValue<number> }) => {
   return (
     <span>
-      {value}
-      {computed(() => (value.get() > 0 ? 'YES' : null))}
-      {computed(() => (value.get() < 0 ? 'NO' : null))}
+      {children}
+      {computed(() => (children.get() > 0 ? 'YES' : null))}
+      {computed(() => (children.get() < 0 ? 'NO' : null))}
     </span>
   );
 };
