@@ -1,6 +1,6 @@
 {
   "name": "mobxact",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1-alpha1",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
