@@ -7,7 +7,7 @@ import {
   isAction,
 } from 'mobx';
 
-export type IComputedFnOptions<F extends (...args: any[]) => any> =
+export type IComputedMapperFnOptions<F extends (args: any) => any> =
   IComputedValueOptions<ReturnType<F>>;
 
 /**
@@ -45,7 +45,7 @@ export type IComputedFnOptions<F extends (...args: any[]) => any> =
  */
 export function computedMapperFn<T extends (arg: any) => any>(
   fn: T,
-  keepAliveOrOptions: IComputedFnOptions<T> | boolean = false
+  keepAliveOrOptions: IComputedMapperFnOptions<T> | boolean = false
 ): T {
   if (isAction(fn))
     throw new Error("computedMapperFn shouldn't be used on actions");
