@@ -24,7 +24,7 @@
   - 组件仅在 mount 的时候 render，因此大部分时候无需关心 rerender
     - 小心，这也意味着如果你在 computed value 中返回 JSX 主动导致其 rerender，其 DOM 会每次重新生成并挂载。
   - 仅有数组、文本内容、DOM 属性会被 update，主要依靠 mobx 的 observable/computed 来提供新的内容，没有 DOMDiff 阶段
-  - 列表渲染时没有了 key 机制。
+  - 列表渲染时没有了 key 机制。依靠 Element 实例的对应关系来确定列表渲染的顺序变化。
   - 组件没有了绝大部分生命周期，因此也没有了 hook 机制。
 - 当然，很多概念的移除不意味着很多功能无法实现，相反，因为没有 rerender 的担忧，大部分功能通过更简单直接的方法进行实现。
   - 请参阅 [为什么 mobxact 下你不再需要 hooks](#为什么-mobxact-下你不再需要-hooks)
@@ -44,17 +44,17 @@
 随后便可以尝试在主程序中渲染一段 jsx：
 
 ```tsx
-import { jsx, render } from 'mobxact';
+import { jsx, html } from 'mobxact';
 
 const rootEl = document.createElement('div');
 document.body.appendChild(rootEl);
-render(<div>Hello, world!</div>, rootEl);
+html.render(<div>Hello, world!</div>, rootEl);
 ```
 
 当然，你还可以实现一个 FC(Function Component)，并渲染它：
 
 ```tsx
-import { jsx, render } from 'mobxact';
+import { jsx, html } from 'mobxact';
 
 function App() {
   return <div>Hello, world!</div>;
@@ -62,7 +62,7 @@ function App() {
 
 const rootEl = document.createElement('div');
 document.body.appendChild(rootEl);
-render(<App />, rootEl);
+html.render(<App />, rootEl);
 ```
 
 到目前为止，一切看起来都和 react 一样。
@@ -185,6 +185,7 @@ Mobxact 支持动态的列表渲染，但必须满足两个条件：
 
 - 你的数组是一个 `IObservableArray` ，或者是一个 `IComputedValue<Array>`，以供 Mobxact 监听
 - 当数组的内容发生变化时，希望维持不变的组件应当总是返回相同的 Element。你可以通过 computedMapperFn 做到这一点。
+  - 如果你需要调整元素渲染的顺序，确保 Element 实例不变，同时调整输出数组中 Element 实例的顺序，就会调整对应 DOM 节点的顺序。
 
 ```jsx
 export function List<T>({
@@ -211,6 +212,18 @@ export function List<T>({
 - 你还可以提供一个函数，接受一个参数，这个函数会在 DOM 对象挂载和卸载的时候分别调用一次。
 
 你可以为其它函数组件提供 ref 属性，但对方的组件必须自己处理 ref 属性，如将 ref 挂载到一个 DOM 元素上，或手动设置 ref 的内容。
+
+```js
+function Switch({ $ref }) {
+  const state = observable.box(false);
+  // TODO: 还缺少一个在组件卸载时自动清理 ref 的最佳实践。
+  $ref.set({
+    switch() {
+      state.set(!state.get());
+    },
+  });
+}
+```
 
 ### Reconciler
 
@@ -256,10 +269,6 @@ export function List<T>({
 ### isElement(v): v is Element
 
 判断一个对象是否 Mobxact JSX Element
-
-### observeUnmount(el, callback): Child
-
-可以在组件返回值使用，用于监听 Mobxact 组件被 unmount 的时机。
 
 ## computedMapperFn(fn): Function
 
