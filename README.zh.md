@@ -212,6 +212,10 @@ export function List<T>({
 
 你可以为其它函数组件提供 ref 属性，但对方的组件必须自己处理 ref 属性，如将 ref 挂载到一个 DOM 元素上，或手动设置 ref 的内容。
 
+### Reconciler
+
+和 React 一样，mobxact 支持用于非 HTML 的场合，类似`react-native`、`react-umg`等，你只需要申明对应的 ReconcilerHost，实现一系列用于创建 DOM、维护 DOM 树、更新属性、文本的 API。
+
 ### 为什么 mobxact 下你不再需要 hooks
 
 - useMemo/useCallback/useRef: FC 函数仅在挂载的时候执行一次，因此你无需使用这些 API 就能保证相应资源只创建一次。如果你需要带有依赖的 useMemo，你可以使用 mobx 的`computed`来实现相同的作用。
@@ -223,11 +227,23 @@ export function List<T>({
 
 ## API Reference
 
-### render(el, parent, before?): IDisposeable
+### new Reconciler(host: ReconcilerHost)
+
+详细的使用，请参考 TypeScript 定义文件。
+
+### Reconciler.prototype.render(el, parent, before?): IDisposeable
 
 渲染一个 JSX，指定渲染的容器。不同于 react，该容器不要求为空，并且你可以指定挂载的相对位置。
 
 返回的对象有一个 dispose 方法，可以删除渲染出的元素并清理所有 mobx 订阅。
+
+## html: Reconciler
+
+用于渲染 HTML 元素的 Reconciler
+
+## svg: Reconciler
+
+用于渲染 SVG 元素的 Reconciler
 
 ### jsx(type, props, ...children): Element
 
