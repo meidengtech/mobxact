@@ -1,15 +1,5 @@
 import { action, computed, observable } from 'mobx';
-import { IBoxedValue, jsx } from 'mobxact';
-
-const ComponentTest = ({ children }: { children: IBoxedValue<number> }) => {
-  return (
-    <span>
-      {children}
-      {computed(() => (children.get() > 0 ? 'YES' : null))}
-      {computed(() => (children.get() < 0 ? 'NO' : null))}
-    </span>
-  );
-};
+import { jsx } from 'mobxact';
 
 export function Counter() {
   const state = observable.box(0);
@@ -24,7 +14,6 @@ export function Counter() {
           state.set(Number(ev.currentTarget.value));
         })}
       />
-      <ComponentTest>{state}</ComponentTest>
       <button
         onclick={action(() => {
           console.log('inc clicked.');
