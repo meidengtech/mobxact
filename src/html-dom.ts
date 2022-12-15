@@ -46,11 +46,8 @@ declare global {
   }
 }
 
-export const html = new Reconciler<Node, HTMLElement | SVGElement, Text>({
+export const html = new Reconciler<Node, HTMLElement, Text>({
   createElement(tag: string) {
-    if (tag === 'svg') {
-      return document.createElementNS(svgns, tag);
-    }
     return document.createElement(tag);
   },
   createTextNode(text: string): Text {
@@ -58,9 +55,9 @@ export const html = new Reconciler<Node, HTMLElement | SVGElement, Text>({
   },
 
   getChildHostContext(
-    parentContext: Reconciler,
+    parentContext: Reconciler<Node>,
     tag: string
-  ): Reconciler | null {
+  ): Reconciler<Node> | null {
     if (tag === 'svg') {
       return svg;
     }

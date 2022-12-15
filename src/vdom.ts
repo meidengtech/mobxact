@@ -43,19 +43,21 @@ export class DOMMountPoint<
 {
   readonly _dom: ElementType;
   readonly _ref?: RefObject<ElementType>;
-  readonly childReconciler: Reconciler;
+  readonly childReconciler: Reconciler<NodeType, ElementType, TextNodeType>;
 
   mountIndex = -1;
 
   constructor(
-    readonly reconciler: Reconciler<NodeType, ElementType, TextNodeType>,
+    readonly reconciler: Reconciler<NodeType>,
     tag: string,
     props: any,
     readonly onMountedDomChanged: (v: NodeType | null) => void
   ) {
-    this.childReconciler =
-      reconciler.host.getChildHostContext?.(reconciler, tag) ?? reconciler;
-    const dom = (this._dom = this.reconciler.host.createElement(tag));
+    this.childReconciler = (reconciler.host.getChildHostContext?.(
+      reconciler,
+      tag
+    ) ?? reconciler) as Reconciler<NodeType, ElementType, TextNodeType>;
+    const dom = (this._dom = this.childReconciler.host.createElement(tag));
 
     if (props) {
       for (const key of Object.keys(props)) {

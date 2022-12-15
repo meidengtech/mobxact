@@ -12,7 +12,7 @@ export interface ReconcilerHost<
   getChildHostContext?(
     parentContext: Reconciler,
     tag: string
-  ): Reconciler | null;
+  ): Reconciler<NodeType> | null;
   insertBefore(
     parent: ElementType,
     child: NodeType,

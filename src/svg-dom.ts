@@ -24,7 +24,7 @@ declare global {
 
 export const svgns = 'http://www.w3.org/2000/svg';
 
-export const svg = new Reconciler<Node, HTMLElement | SVGElement, Text>({
+export const svg = new Reconciler<Node, SVGElement, Text>({
   createElement(tag: string) {
     return document.createElementNS(svgns, tag);
   },
@@ -33,22 +33,22 @@ export const svg = new Reconciler<Node, HTMLElement | SVGElement, Text>({
   },
 
   getChildHostContext(
-    parentContext: Reconciler,
+    parentContext: Reconciler<Node, SVGElement, Text>,
     tag: string
-  ): Reconciler | null {
+  ): Reconciler<Node> | null {
     if (tag === 'foreignobject') {
       return html;
     }
     return parentContext;
   },
-  insertBefore(parent: HTMLElement, child: Node, before: Node | null): void {
+  insertBefore(parent: SVGElement, child: Node, before: Node | null): void {
     parent.insertBefore(child, before);
   },
-  removeChild(parent: HTMLElement, child: Node): void {
+  removeChild(parent: SVGElement, child: Node): void {
     parent.removeChild(child);
   },
 
-  setProperty(dom: HTMLElement, key: string, v: unknown): void {
+  setProperty(dom: SVGElement, key: string, v: unknown): void {
     if (typeof v === 'function' || key == 'value') {
       (dom as any)[key] = v;
     } else if (key === 'checked' || key === 'disabled') {
