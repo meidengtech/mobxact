@@ -39,10 +39,6 @@ declare global {
       input: HTMLInputElement;
       button: HTMLButtonElement;
     }
-
-    interface ElementChildrenAttribute {
-      children: {}; // specify children name to use
-    }
   }
 }
 

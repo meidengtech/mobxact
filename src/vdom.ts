@@ -28,7 +28,7 @@ export interface IMountPoint<
   // insert dom at specfic place.
   mount(parent: ElementType, before: () => NodeType | null): void;
 
-  // unmount self, do not unmoutn children.
+  // unmount self, do not unmount children.
   unmount(): void;
 
   // dispose(and unmount) self and all children.
@@ -64,6 +64,10 @@ export class DOMMountPoint<
         const value = props[key];
         if (key === 'ref') {
           this._ref = value;
+          continue;
+        }
+        if (key === 'children') {
+          continue;
         }
         if (isBoxedObservable(value) || isComputed(value)) {
           this.disposes.push(
@@ -213,30 +217,28 @@ export class VirtualMountPoint<
     }
 
     if (this.parent) {
-      if (this.textDom) {
-        this.onMountedDomChanged(this.textDom);
-        this.reconciler.host.insertBefore(
-          this.parent,
-          this.textDom,
-          this.before!()
-        );
-      }
-      if (this.childMountPoint) {
-        this.childMountPoint.mount(this.parent, this.before!);
-      }
+      this.mountChildren();
+    }
+  }
+
+  mountChildren() {
+    if (this.textDom) {
+      this.onMountedDomChanged(this.textDom);
+      this.reconciler.host.insertBefore(
+        this.parent!,
+        this.textDom,
+        this.before!()
+      );
+    }
+    if (this.childMountPoint) {
+      this.childMountPoint.mount(parent, this.before!);
     }
   }
 
   mount(parent: ElementType, before: () => NodeType | null) {
     this.parent = parent;
     this.before = before;
-    if (this.textDom) {
-      this.onMountedDomChanged(this.textDom);
-      this.reconciler.host.insertBefore(parent, this.textDom, before());
-    }
-    if (this.childMountPoint) {
-      this.childMountPoint.mount(parent, before);
-    }
+    this.mountChildren();
   }
 
   disposeChildren() {
@@ -350,7 +352,7 @@ export class ListMountPoint<
       return;
     }
     const q = this.bitset.query();
-    return q >= 0 ? this.doms[q] : null;
+    this.onMountedDomChanged(q >= 0 ? this.doms[q] : null);
   }
 
   update(el: Children) {

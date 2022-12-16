@@ -37,24 +37,11 @@ export type ElementType<PropType extends {} = any> =
 
 const elementSymbol = Symbol('element');
 
-type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0
-  ? undefined
-  : ((...b: T) => void) extends (a: any, ...b: infer I) => void
-  ? I
-  : [];
-
 export type ElementPropType<Type extends ElementType> =
   Type extends keyof JSX.IntrinsicElements
     ? JSX.IntrinsicElements[Type]
     : Type extends ComponentType
     ? Parameters<Type>[0]
-    : unknown;
-
-export type ElementChildrenType<Type extends ElementType> =
-  Type extends keyof JSX.IntrinsicElements
-    ? Children
-    : Type extends ComponentType
-    ? RemoveFirstFromTuple<Parameters<Type>>
     : unknown;
 
 export type ValueOrObservable<T> = T | IBoxedValue<T>;
@@ -69,10 +56,15 @@ export interface IDisposeable {
   dispose(): void;
 }
 
+// React.createElement
 export function jsx<Type extends ElementType>(
   type: Type,
-  props: ElementPropType<Type>,
-  ...children: ElementChildrenType<Type>
+  props: Omit<ElementPropType<Type>, 'children'> & {
+    children?: ElementPropType<Type>['children'];
+  },
+  ...children:
+    | ElementPropType<Type>['children']
+    | [ElementPropType<Type>['children']]
 ): Element<Type>;
 export function jsx(
   type: string | ComponentType,
