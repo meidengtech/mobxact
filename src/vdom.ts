@@ -263,9 +263,9 @@ export class VirtualMountPoint<
   }
 
   unmount() {
+    this.unmountChildren();
     delete this.parent;
     delete this.before;
-    this.unmountChildren();
   }
 
   dispose() {
@@ -448,15 +448,14 @@ export class ListMountPoint<
   }
 
   unmount() {
-    delete this.parent;
-    delete this.before;
     for (const item of this.children) {
       item.unmount();
     }
+    delete this.parent;
+    delete this.before;
   }
 
   dispose() {
-    this.unmount();
     for (const item of this.children) {
       item.dispose();
     }

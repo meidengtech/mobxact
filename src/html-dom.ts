@@ -1,25 +1,29 @@
 import { Ref, JSXNode, IBoxedValue } from './common';
 import { Reconciler } from './reconciler';
-import { svg, svgns } from './svg-dom';
+import { svg } from './svg-dom';
+
+interface HTMLIntrisicElements<Type extends HTMLElement = HTMLElement> {
+  ref?: Ref<Type>;
+  children?: JSXNode;
+  className?: string;
+
+  onclick?: (ev: MouseEvent & { currentTarget: HTMLElement }) => void;
+}
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      div: {
-        ref?: Ref<HTMLDivElement>;
-        children?: JSXNode;
+      div: HTMLIntrisicElements<HTMLDivElement> & {};
+      a: HTMLIntrisicElements<HTMLAnchorElement> & {
+        href: string;
+        target?: string;
       };
-      span: {
-        ref?: Ref<HTMLSpanElement>;
-        children?: JSXNode;
-      };
-      input: {
-        ref?: Ref<HTMLInputElement>;
+      span: HTMLIntrisicElements<HTMLSpanElement> & {};
+      input: HTMLIntrisicElements<HTMLInputElement> & {
         type?: string | IBoxedValue<string>;
         checked?: boolean | IBoxedValue<boolean>;
         disabled?: boolean | IBoxedValue<boolean>;
         value?: string | IBoxedValue<string>;
-        children?: JSXNode;
 
         onchange?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
         oninput?: (
@@ -67,7 +71,7 @@ export const html = new Reconciler<Node, HTMLElement, Text>({
   },
 
   setProperty(dom: HTMLElement, key: string, v: unknown): void {
-    if (typeof v === 'function' || key == 'value') {
+    if (typeof v === 'function' || key == 'value' || key === 'className') {
       (dom as any)[key] = v;
     } else if (key === 'checked' || key === 'disabled') {
       if (v) {

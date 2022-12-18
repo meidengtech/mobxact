@@ -163,7 +163,13 @@ function App() {
 另一种解决方案是将 Element 渲染好，并传递给另一个组件进行条件渲染，这样可以确保 Element 实例不变
 
 ```tsx
-function If({ test }: { test: IBoxedValue<boolean> }, ...children: Children) {
+export function If({
+  test,
+  children,
+}: {
+  test: IBoxedValue<boolean>;
+  children: Children;
+}) {
   return computed(() => (test.get() ? children : null));
 }
 
