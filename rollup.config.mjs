@@ -20,6 +20,7 @@ export default [
         name: 'Mobxact',
         format: 'umd',
         globals: {
+          mobx: 'mobx',
           mobxact: 'Mobxact',
         },
       },

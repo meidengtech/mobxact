@@ -85,15 +85,16 @@ export class DOMMountPoint<
           this.reconciler.host.setProperty(dom, key, value);
         }
       }
+      if (props.children) {
+        const mp = new ListMountPoint(
+          this.childReconciler,
+          props.children,
+          () => {}
+        );
+        mp.mount(dom, () => null);
+      }
     }
-    if (props.children) {
-      const mp = new ListMountPoint(
-        this.childReconciler,
-        props.children,
-        () => {}
-      );
-      mp.mount(dom, () => null);
-    }
+
     this.updateRef(dom);
   }
   disposes: IReactionDisposer[] = [];
@@ -231,7 +232,7 @@ export class VirtualMountPoint<
       );
     }
     if (this.childMountPoint) {
-      this.childMountPoint.mount(parent, this.before!);
+      this.childMountPoint.mount(this.parent, this.before!);
     }
   }
 
