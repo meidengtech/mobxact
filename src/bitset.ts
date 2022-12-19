@@ -92,7 +92,7 @@ export class BitSet {
     const id = i >> 5;
     const mask = i & 31;
     if (this.bitset[id] & mask) {
-      this.bitset[id] &= -1 << mask;
+      this.bitset[id] &= ~(1 << mask);
       if (!this.bitset[id]) {
         this.fenwick_inc(id, -1);
       }
