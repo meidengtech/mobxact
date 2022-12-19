@@ -88,7 +88,7 @@ export function isElement(v: unknown): v is Element {
   return !!v && typeof v == 'object' && elementSymbol in v;
 }
 
-export function observeUmount(el: Child, callback: () => void): Child {
+export function observeUnmount(el: Child, callback: () => void): Child {
   const ret = computed(() => {
     if (isBoxedObservable(el) || isComputed(el)) {
       return (el as IBoxedValue<Child>).get();

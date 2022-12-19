@@ -7,7 +7,7 @@ interface HTMLIntrisicElements<Type extends HTMLElement = HTMLElement> {
   children?: JSXNode;
   className?: string | IBoxedValue<string>;
 
-  onclick?: (ev: MouseEvent & { currentTarget: HTMLElement }) => void;
+  onclick?: (ev: MouseEvent & { currentTarget: Type }) => void;
 }
 
 declare global {
@@ -26,14 +26,25 @@ declare global {
         value?: string | IBoxedValue<string>;
 
         onchange?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
+        onfocus?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
+        onblur?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
         oninput?: (
           ev: InputEvent & { currentTarget: HTMLInputElement }
         ) => void;
       };
-      button: {
-        ref?: Ref<HTMLButtonElement>;
+      textarea: HTMLIntrisicElements<HTMLTextAreaElement> & {
+        type?: string | IBoxedValue<string>;
+        checked?: boolean | IBoxedValue<boolean>;
+        disabled?: boolean | IBoxedValue<boolean>;
+        value?: string | IBoxedValue<string>;
+
+        onchange?: (ev: Event & { currentTarget: HTMLTextAreaElement }) => void;
+        oninput?: (
+          ev: InputEvent & { currentTarget: HTMLTextAreaElement }
+        ) => void;
+      };
+      button: HTMLIntrisicElements<HTMLButtonElement> & {
         children?: JSXNode;
-        onclick?: (ev: MouseEvent) => void;
       };
     }
 
