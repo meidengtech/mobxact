@@ -7,7 +7,7 @@ interface HTMLIntrisicElements<Type extends HTMLElement = HTMLElement> {
   children?: JSXNode;
   className?: string | IBoxedValue<string>;
 
-  onclick?: (ev: MouseEvent & { currentTarget: Type }) => void;
+  onClick?: (ev: MouseEvent & { currentTarget: Type }) => void;
 }
 
 declare global {
@@ -24,11 +24,16 @@ declare global {
         checked?: boolean | IBoxedValue<boolean>;
         disabled?: boolean | IBoxedValue<boolean>;
         value?: string | IBoxedValue<string>;
+        placeholder?: string | IBoxedValue<string>;
+        autoFocus?: boolean | IBoxedValue<boolean>;
 
-        onchange?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
-        onfocus?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
-        onblur?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
-        oninput?: (
+        onChange?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
+        onFocus?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
+        onBlur?: (ev: Event & { currentTarget: HTMLInputElement }) => void;
+        onKeyDown?: (
+          ev: KeyboardEvent & { currentTarget: HTMLInputElement }
+        ) => void;
+        onInput?: (
           ev: InputEvent & { currentTarget: HTMLInputElement }
         ) => void;
       };
@@ -38,8 +43,8 @@ declare global {
         disabled?: boolean | IBoxedValue<boolean>;
         value?: string | IBoxedValue<string>;
 
-        onchange?: (ev: Event & { currentTarget: HTMLTextAreaElement }) => void;
-        oninput?: (
+        onChange?: (ev: Event & { currentTarget: HTMLTextAreaElement }) => void;
+        onInput?: (
           ev: InputEvent & { currentTarget: HTMLTextAreaElement }
         ) => void;
       };
@@ -56,6 +61,22 @@ declare global {
     }
   }
 }
+
+const directProperties: { [key: string]: string } = {
+  // direct properties.
+  value: 'value',
+  className: 'className',
+  autoFocus: 'autofocus',
+  placeholder: 'placeholder',
+
+  // events.
+  onKeyDown: 'onkeydown',
+  onChange: 'onchange',
+  onClick: 'onclick',
+  onInput: 'oninput',
+  onFocus: 'onfocus',
+  onBlur: 'onblur',
+};
 
 export const html = new Reconciler<Node, HTMLElement, Text>({
   createElement(tag: string) {
@@ -82,8 +103,8 @@ export const html = new Reconciler<Node, HTMLElement, Text>({
   },
 
   setProperty(dom: HTMLElement, key: string, v: unknown): void {
-    if (typeof v === 'function' || key == 'value' || key === 'className') {
-      (dom as any)[key] = v;
+    if (typeof v === 'function' || directProperties[key]) {
+      (dom as any)[directProperties[key]] = v;
     } else if (key === 'checked' || key === 'disabled') {
       if (v) {
         dom.setAttribute(key, key);
