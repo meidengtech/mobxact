@@ -5,7 +5,7 @@ import { svg } from './svg-dom';
 interface HTMLIntrisicElements<Type extends HTMLElement = HTMLElement> {
   ref?: Ref<Type>;
   children?: JSXNode;
-  className?: string;
+  className?: string | IBoxedValue<string>;
 
   onclick?: (ev: MouseEvent & { currentTarget: HTMLElement }) => void;
 }
@@ -15,8 +15,8 @@ declare global {
     interface IntrinsicElements {
       div: HTMLIntrisicElements<HTMLDivElement> & {};
       a: HTMLIntrisicElements<HTMLAnchorElement> & {
-        href: string;
-        target?: string;
+        href: string | IBoxedValue<string>;
+        target?: string | IBoxedValue<string>;
       };
       span: HTMLIntrisicElements<HTMLSpanElement> & {};
       input: HTMLIntrisicElements<HTMLInputElement> & {
