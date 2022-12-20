@@ -42,6 +42,8 @@ declare global {
         checked?: boolean | IBoxedValue<boolean>;
         disabled?: boolean | IBoxedValue<boolean>;
         value?: string | IBoxedValue<string>;
+        placeholder?: string | IBoxedValue<string>;
+        autoFocus?: boolean | IBoxedValue<boolean>;
 
         onChange?: (ev: Event & { currentTarget: HTMLTextAreaElement }) => void;
         onInput?: (

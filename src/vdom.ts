@@ -31,7 +31,7 @@ export interface IMountPoint<
   // unmount self, do not unmount children.
   unmount(): void;
 
-  // dispose(and unmount) self and all children.
+  // dispose self and all children.
   dispose(): void;
 }
 

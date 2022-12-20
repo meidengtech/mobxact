@@ -44,6 +44,11 @@ export class Reconciler<
       () => {}
     );
     ret.mount(parent, () => before);
-    return ret;
+    return {
+      dispose: () => {
+        ret.unmount();
+        ret.dispose();
+      },
+    };
   }
 }
