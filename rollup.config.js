@@ -1,9 +1,9 @@
-import typescript from 'rollup-plugin-typescript2';
-import clear from 'rollup-plugin-clear';
-import terser from '@rollup/plugin-terser';
-import pkg from './package.json' assert { type: 'json' };
+const typescript = require('rollup-plugin-typescript2');
+const clear = require('rollup-plugin-clear');
+const terser = require('@rollup/plugin-terser');
+const pkg = require('./package.json');
 
-export default [
+module.exports = [
   {
     input: 'src/index.ts',
     output: [
