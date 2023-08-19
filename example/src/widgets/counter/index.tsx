@@ -10,12 +10,12 @@ export function Counter() {
       Current Value:
       <input
         value={computed(() => state.get().toString())}
-        oninput={action((ev) => {
+        onInput={action((ev) => {
           state.set(Number(ev.currentTarget.value));
         })}
       />
       <button
-        onclick={action(() => {
+        onClick={action(() => {
           console.log('inc clicked.');
           state.set(state.get() + 1);
         })}
@@ -23,7 +23,7 @@ export function Counter() {
         inc
       </button>
       <button
-        onclick={action(() => {
+        onClick={action(() => {
           console.log('dec clicked.');
           state.set(state.get() - 1);
         })}

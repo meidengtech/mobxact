@@ -15,6 +15,12 @@
     "strict": true,
     "paths": {
       "mobxact": ["../dist"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": { "customMatcher": "\\.css$" }
+      }
+    ]
   }
 }

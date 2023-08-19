@@ -39,8 +39,8 @@ export function SvgTest() {
   return (
     <div>
       <div>
-        <button onclick={newCircle}>Add Circle</button>
-        <button onclick={clear}>Clear</button>
+        <button onClick={newCircle}>Add Circle</button>
+        <button onClick={clear}>Clear</button>
       </div>
       <div>
         <svg height="640" width="480">

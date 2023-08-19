@@ -21,6 +21,7 @@ export interface ReconcilerHost<
   removeChild(parent: ElementType, child: NodeType): void;
 
   setProperty(node: ElementType, key: string, value: unknown): void;
+  setCSSProperty(node: ElementType, key: string, value: unknown): void;
   setTextContent(node: TextNodeType, text: string): void;
 }
 

@@ -69,6 +69,27 @@ export class DOMMountPoint<
         if (key === 'children') {
           continue;
         }
+        if (key === 'style') {
+          for (const key of Object.keys(value)) {
+            const cssValue = value[key];
+            if (isBoxedObservable(cssValue) || isComputed(cssValue)) {
+              this.disposes.push(
+                reaction(
+                  () => cssValue.get(),
+                  (v) => {
+                    this.reconciler.host.setCSSProperty(dom, key, v);
+                  },
+                  {
+                    fireImmediately: true,
+                  }
+                )
+              );
+            } else {
+              this.reconciler.host.setCSSProperty(dom, key, cssValue);
+            }
+          }
+          continue;
+        }
         if (isBoxedObservable(value) || isComputed(value)) {
           this.disposes.push(
             reaction(

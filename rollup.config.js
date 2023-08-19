@@ -21,7 +21,6 @@ module.exports = [
         format: 'umd',
         globals: {
           mobx: 'mobx',
-          mobxact: 'Mobxact',
         },
       },
     ],

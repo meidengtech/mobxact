@@ -6,6 +6,7 @@ import {
   isComputed,
   onBecomeUnobserved,
 } from 'mobx';
+import { AttributeRecord, CSSProperties } from './types';
 
 export interface IBoxedValue<T> {
   get(): T;
