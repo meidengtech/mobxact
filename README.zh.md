@@ -79,6 +79,8 @@ function SomeComponent(props: PropTypes, ...children: Children) {
 
 你可以给 children 指定任何其它的类型约束，但目前 TypeScript 并不能很好的检查 Mobxact 中 Children 的类型约束。
 
+> 警告：由于TypeScript的兼容问题，这个语法可能会在将来改变。
+
 ### 数据状态
 
 mobx 本身就是一个非常好的状态管理，因此当你需要管理一个状态时，你可以直接创建一个 observable
