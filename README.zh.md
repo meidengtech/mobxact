@@ -162,7 +162,7 @@ function App() {
 }
 ```
 
-另一种解决方案是将 Element 渲染好，并传递给另一个组件进行条件渲染，这样可以确保 Element 实例不变
+另一种解决方案是将 Element 渲染好，并传递给另一个组件进行条件渲染，这样可以确保 Element 实例不变（它仍然会在状态切换时重新挂载，这一点和React一样）
 
 ```tsx
 export function If({
